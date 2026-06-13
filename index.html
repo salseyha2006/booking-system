@@ -3,384 +3,1056 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ប្រព័ន្ធគ្រប់គ្រងការកក់អីវ៉ាន់ V5.1 (Fixed Seller Bug)</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>ប្រព័ន្ធគ្រប់គ្រងការកក់អីវ៉ាន់ V6.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <style>
-        body { font-family: 'Kantumruy Pro', 'Khmer OS Battambang', sans-serif; }
+        :root {
+            --primary: #1a56db;
+            --primary-light: #e8f0fe;
+            --primary-dark: #1341b0;
+            --success: #0f9d58;
+            --success-light: #e6f4ea;
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --purple: #7c3aed;
+            --purple-light: #ede9fe;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --bg: #f0f4ff;
+            --surface: #ffffff;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+            --transition: all 0.2s ease;
+        }
+        [data-theme="dark"] {
+            --primary: #4f80f0;
+            --primary-light: #1e2d4d;
+            --primary-dark: #6b95f5;
+            --success: #34d399;
+            --success-light: #0d2d1e;
+            --warning: #fbbf24;
+            --warning-light: #2d1f00;
+            --danger: #f87171;
+            --danger-light: #2d0f0f;
+            --purple: #a78bfa;
+            --purple-light: #2d1f4d;
+            --gray-50: #1a1c23;
+            --gray-100: #1e2028;
+            --gray-200: #2a2d38;
+            --gray-300: #3a3e4d;
+            --gray-400: #5a607a;
+            --gray-500: #8890a8;
+            --gray-600: #a8b2c8;
+            --gray-700: #c8d0e0;
+            --gray-800: #e0e6f0;
+            --gray-900: #f0f4ff;
+            --bg: #0f1117;
+            --surface: #1a1c23;
+            --shadow: 0 1px 3px rgba(0,0,0,0.4);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            background: var(--bg);
+            color: var(--gray-800);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+            font-size: 14px;
+        }
+
+        /* TOP NAV */
+        .topnav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .topnav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .topnav-brand .brand-icon {
+            width: 34px; height: 34px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 18px;
+        }
+        .topnav-actions { display: flex; align-items: center; gap: 8px; }
+        .btn-icon {
+            width: 36px; height: 36px;
+            border: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--gray-600);
+            font-size: 18px;
+            transition: var(--transition);
+        }
+        .btn-icon:hover { background: var(--gray-100); color: var(--primary); }
+
+        /* TABS */
+        .tabs {
+            background: var(--surface);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 24px;
+            display: flex; gap: 0;
+        }
+        .tab-btn {
+            padding: 14px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-500);
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .tab-btn:hover { color: var(--primary); }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* LAYOUT */
+        .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+            display: flex; align-items: center; gap: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .stat-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; flex-shrink: 0;
+        }
+        .stat-icon.blue { background: var(--primary-light); color: var(--primary); }
+        .stat-icon.orange { background: var(--warning-light); color: var(--warning); }
+        .stat-icon.green { background: var(--success-light); color: var(--success); }
+        .stat-icon.purple { background: var(--purple-light); color: var(--purple); }
+        .stat-label { font-size: 12px; color: var(--gray-500); margin-bottom: 4px; }
+        .stat-value { font-size: 24px; font-weight: 700; color: var(--gray-900); line-height: 1; }
+
+        /* CARD */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+        }
+        .card-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .card-title {
+            font-size: 14px; font-weight: 600; color: var(--gray-800);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .card-body { padding: 20px; }
+
+        /* FORM */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-label { font-size: 12px; font-weight: 500; color: var(--gray-600); }
+        .form-control {
+            padding: 9px 12px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-size: 13px;
+            background: var(--surface);
+            color: var(--gray-800);
+            transition: var(--transition);
+            outline: none;
+        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,0.1); }
+        .form-control:disabled { background: var(--gray-100); color: var(--gray-400); cursor: not-allowed; }
+        select.form-control { cursor: pointer; }
+
+        /* BUTTONS */
+        .btn {
+            padding: 9px 16px;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: var(--transition);
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { filter: brightness(1.1); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { filter: brightness(1.1); }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-warning:hover { filter: brightness(1.1); }
+        .btn-ghost {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+        }
+        .btn-ghost:hover { background: var(--gray-200); }
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
+        .btn-full { width: 100%; justify-content: center; }
+
+        /* CONTENT GRID */
+        .content-grid { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
+        @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; } }
+
+        /* FILTER BAR */
+        .filter-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+        .filter-bar .filter-row { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+        /* TABLE */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead tr { background: var(--gray-50); }
+        th {
+            padding: 11px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--gray-500);
+            border-bottom: 1px solid var(--gray-200);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+        th:hover { color: var(--primary); }
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-700);
+            vertical-align: middle;
+        }
+        tbody tr:hover { background: var(--gray-50); }
+        tbody tr:last-child td { border-bottom: none; }
+
+        /* BADGES */
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-orange { background: var(--warning-light); color: #b45309; }
+        .badge-green { background: var(--success-light); color: #065f46; }
+        .badge-blue { background: var(--primary-light); color: var(--primary-dark); }
+        .badge-red { background: var(--danger-light); color: #991b1b; }
+        .badge-gray { background: var(--gray-100); color: var(--gray-600); }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-400);
+        }
+        .empty-state i { font-size: 48px; margin-bottom: 12px; display: block; }
+        .empty-state p { font-size: 13px; }
+
+        /* TOAST */
+        #toastContainer {
+            position: fixed; bottom: 24px; right: 24px;
+            display: flex; flex-direction: column; gap: 8px;
+            z-index: 9999;
+        }
+        .toast {
+            display: flex; align-items: center; gap: 10px;
+            background: var(--gray-900);
+            color: white;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            box-shadow: var(--shadow-md);
+            animation: slideIn 0.3s ease;
+            min-width: 220px;
+        }
+        .toast.success { border-left: 3px solid var(--success); }
+        .toast.error { border-left: 3px solid var(--danger); }
+        .toast.info { border-left: 3px solid var(--primary); }
+        @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 500;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            width: 360px;
+            box-shadow: var(--shadow-md);
+        }
+        .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .modal p { font-size: 13px; color: var(--gray-500); margin-bottom: 20px; }
+        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+        /* SELLER MANAGEMENT */
+        .seller-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .seller-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+        }
+        .seller-item span { font-size: 13px; color: var(--gray-700); }
+
+        /* PAGINATION */
+        .pagination {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 20px;
+            border-top: 1px solid var(--gray-200);
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        .pagination-btns { display: flex; gap: 4px; }
+        .page-btn {
+            width: 30px; height: 30px;
+            border: 1px solid var(--gray-200);
+            background: var(--surface);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: var(--gray-600);
+            font-family: 'Kantumruy Pro', sans-serif;
+            transition: var(--transition);
+        }
+        .page-btn:hover { background: var(--gray-100); }
+        .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* SELLER TAGS */
+        .seller-avatar {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px; font-weight: 700;
+            display: inline-flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* STATUS STEPS */
+        .status-select {
+            appearance: none;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            border: none; cursor: pointer;
+            font-family: 'Kantumruy Pro', sans-serif;
+        }
+
+        .sort-arrow { margin-left: 4px; color: var(--gray-300); }
+        .sort-arrow.active { color: var(--primary); }
+
+        /* CHART BAR */
+        .chart-bar-wrap { padding: 20px; }
+        .chart-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .chart-row-label { width: 120px; font-size: 12px; color: var(--gray-600); text-align: right; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chart-bar-track { flex: 1; height: 22px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+        .chart-bar-fill { height: 100%; background: var(--primary); border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; font-size: 11px; font-weight: 600; color: white; transition: width 0.6s ease; }
+        .chart-bar-fill.green { background: var(--success); }
+        .chart-bar-fill.orange { background: var(--warning); }
     </style>
 </head>
-<body class="bg-gray-100 p-6">
+<body>
 
-    <div class="max-w-7xl mx-auto space-y-6">
-        <h1 class="text-2xl font-bold text-center text-blue-600">ប្រព័ន្ធគ្រប់គ្រងការកក់អីវ៉ាន់ - បញ្ជីរួម និងតម្រងតាម Seller</h1>
+<!-- NAV -->
+<nav class="topnav">
+    <div class="topnav-brand">
+        <div class="brand-icon"><i class="ti ti-package"></i></div>
+        <span>ប្រព័ន្ធកក់អីវ៉ាន់ <span style="font-size:11px;color:var(--gray-400);font-weight:400;">V6.0</span></span>
+    </div>
+    <div class="topnav-actions">
+        <button class="btn-icon" onclick="exportCSV()" title="Export CSV"><i class="ti ti-download"></i></button>
+        <button class="btn-icon" id="btnDark" onclick="toggleDark()" title="Dark Mode"><i class="ti ti-moon"></i></button>
+    </div>
+</nav>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow lg:col-span-1 h-fit">
-                <div class="border-b pb-2 mb-4">
-                    <h2 id="formTitle" class="text-lg font-semibold text-gray-700">១. បញ្ចូលការកក់ថ្មី</h2>
+<!-- TABS -->
+<div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('orders')"><i class="ti ti-list"></i> បញ្ជីការកក់</button>
+    <button class="tab-btn" onclick="switchTab('sellers')"><i class="ti ti-users"></i> គ្រប់គ្រង Seller</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- DASHBOARD TAB -->
+    <div class="tab-content active" id="tab-dashboard">
+        <div class="stats-grid" id="statsGrid"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="ti ti-chart-bar"></i> ការកក់តាម Seller</div>
                 </div>
-                
-                <form id="orderForm" class="space-y-3">
-                    <input type="hidden" id="formMode" value="add">
-                    
-                    <div>
-                        <div class="flex justify-between items-center">
-                            <label class="block text-sm text-gray-600">អ្នកលក់ (Seller)</label>
-                            <button type="button" onclick="addNewSeller()" class="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center gap-0.5 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 cursor-pointer">
-                                ➕ ថែម Seller ថ្មី
-                            </button>
-                        </div>
-                        <select id="sellerName" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500 bg-white">
-                            <option value="">-- ជ្រើសរើសឈ្មោះ Seller --</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-600">លេខសម្គាល់ (ID)</label>
-                        <input type="text" id="orderId" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-600">ឈ្មោះអតិថិជន</label>
-                        <input type="text" id="custName" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-600">លេខទូរស័ព្ទ</label>
-                        <input type="text" id="custPhone" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-600">កាលបរិច្ឆេទកក់</label>
-                        <input type="date" id="orderDate" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-600">មុខទំនិញ (Product)</label>
-                        <input type="text" id="productName" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
-                    </div>
-                    
-                    <div class="flex flex-col gap-2 pt-2">
-                        <button type="submit" id="btnSubmit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 font-medium transition cursor-pointer">រក្សាទុក</button>
-                        <button type="button" id="btnCancelEdit" onclick="resetForm()" class="hidden w-full bg-gray-400 text-white p-2 rounded hover:bg-gray-500 font-medium transition cursor-pointer">បោះបង់ការកែប្រែ</button>
-                        <button type="button" onclick="resetForm()" class="w-full text-xs text-gray-500 hover:text-gray-700 text-center underline pt-1 cursor-pointer">សម្អាត Form (Clear)</button>
-                    </div>
-                </form>
+                <div class="chart-bar-wrap" id="chartSeller"></div>
             </div>
-
-            <div class="bg-white p-6 rounded-lg shadow lg:col-span-2 space-y-4">
-                <h2 class="text-lg font-semibold text-gray-700 border-b pb-2">២. បញ្ជីទិន្នន័យអតិថិជនកក់ទាំងអស់</h2>
-                
-                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-                    <div class="md:col-span-2">
-                        <label class="block text-xs text-gray-500 mb-1">ស្វែងរកតាម ID, ឈ្មោះ ឬ លេខទូរស័ព្ទ</label>
-                        <input type="text" id="searchKey" oninput="searchAndFilterOrders()" placeholder="វាយព័ត៌មានអតិថិជន..." class="w-full border p-2 rounded bg-white focus:outline-green-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs text-gray-500 mb-1">🎯 មើលតាមអ្នកលក់ (Filter by Seller)</label>
-                        <select id="filterSeller" onchange="searchAndFilterOrders()" class="w-full border p-2 rounded bg-white focus:outline-green-500 font-medium text-blue-600">
-                            <option value="all">-- បង្ហាញអតិថិជនទាំងអស់ --</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1">ចាប់ពីថ្ងៃ (Start Date)</label>
-                        <input type="date" id="startDate" onchange="searchAndFilterOrders()" class="w-full border p-2 rounded bg-white focus:outline-green-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1">ដល់ថ្ងៃ (End Date)</label>
-                        <input type="date" id="endDate" onchange="searchAndFilterOrders()" class="w-full border p-2 rounded bg-white focus:outline-green-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <button onclick="resetFilters()" class="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600 font-medium transition cursor-pointer">
-                            🔄 សម្អាតតម្រង (Reset Filters)
-                        </button>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="ti ti-clock" style="color:var(--warning)"></i> ការកក់ថ្មីៗ (៥ ចុងក្រោយ)</div>
                 </div>
-                
-                <div id="searchResultArea" class="overflow-x-auto min-h-[300px]">
-                    </div>
+                <div id="recentOrders" style="padding:0 4px;"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        // --- ១. ផ្នែកគ្រប់គ្រងទិន្នន័យអ្នកលក់ (Seller) ---
-        function getSellers() {
-            const sellers = localStorage.getItem('booking_sellers');
-            if (sellers) {
-                return JSON.parse(sellers);
-            } else {
-                // បើបើកដំបូងគ្មានទិន្នន័យ ង្កើតបញ្ជីដើមជូន
-                const defaultSellers = ["កញ្ញា ធីតា", "លោក សុខា", "កញ្ញា ស្រីនាថ"];
-                localStorage.setItem('booking_sellers', JSON.stringify(defaultSellers));
-                return defaultSellers;
-            }
-        }
-
-        function renderSellerDropdowns() {
-            const sellerSelect = document.getElementById('sellerName');
-            const filterSellerSelect = document.getElementById('filterSeller');
-            const sellers = getSellers();
-            
-            // រក្សាតម្លៃដែលកំពុងជ្រើសរើសចាស់
-            const currentSelectValue = sellerSelect.value; 
-            const currentFilterValue = filterSellerSelect.value; 
-
-            // សម្អាតទិន្នន័យចាស់ក្នុង Dropdown ចេញ
-            sellerSelect.innerHTML = '<option value="">-- ជ្រើសរើសឈ្មោះ Seller --</option>';
-            filterSellerSelect.innerHTML = '<option value="all">-- បង្ហាញអតិថិជនទាំងអស់ --</option>';
-            
-            // ចាក់ទិន្នន័យថ្មីចូល
-            sellers.forEach(seller => {
-                const option1 = document.createElement('option');
-                option1.value = seller; option1.text = seller;
-                sellerSelect.appendChild(option1);
-
-                const option2 = document.createElement('option');
-                option2.value = seller; option2.text = `មើលតែរបស់៖ ${seller}`;
-                filterSellerSelect.appendChild(option2);
-            });
-
-            // ដាក់តម្លៃចាស់ចូលវិញ (បើមាន)
-            if (currentSelectValue) sellerSelect.value = currentSelectValue;
-            if (currentFilterValue) filterSellerSelect.value = currentFilterValue;
-        }
-
-        function addNewSeller() {
-            const newName = prompt("សូមវាយបញ្ចូលឈ្មោះ Seller ថ្មី៖");
-            if (newName === null) return; // ចុច Cancel
-            
-            const trimmedName = newName.trim();
-            if (trimmedName === "") {
-                alert("ឈ្មោះមិនអាចទទេបានទេ!");
-                return;
-            }
-
-            let sellers = getSellers();
-            if (sellers.includes(trimmedName)) {
-                alert("ឈ្មោះ Seller នេះមានរួចរាល់ហើយ!");
-                return;
-            }
-
-            // បន្ថែមឈ្មោះថ្មីចូលកូនកាត់ LocalStorage
-            sellers.push(trimmedName);
-            localStorage.setItem('booking_sellers', JSON.stringify(sellers));
-            
-            // ធ្វើបច្ចុប្បន្នភាព Dropdown ទាំងពីរភ្លាមៗ
-            renderSellerDropdowns();
-            
-            // ចាប់យកឈ្មោះដែលទើបថែមថ្មីនោះមកជ្រើសរើសលើ Form តែម្តង
-            document.getElementById('sellerName').value = trimmedName;
-            
-            alert(`បានបន្ថែម Seller "${trimmedName}" ជោគជ័យ!`);
-        }
-
-
-        // --- ២. ផ្នែកគ្រប់គ្រងទិន្នន័យការកក់ (Orders) ---
-        function getOrders() {
-            const orders = localStorage.getItem('booking_orders_v4');
-            return orders ? JSON.parse(orders) : [];
-        }
-
-        function saveOrders(orders) {
-            localStorage.setItem('booking_orders_v4', JSON.stringify(orders));
-        }
-
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const mode = document.getElementById('formMode').value;
-            const seller = document.getElementById('sellerName').value;
-            const id = document.getElementById('orderId').value.trim();
-            const name = document.getElementById('custName').value.trim();
-            const phone = document.getElementById('custPhone').value.trim();
-            const date = document.getElementById('orderDate').value;
-            const product = document.getElementById('productName').value.trim();
-
-            let orders = getOrders();
-
-            if (mode === 'add') {
-                if (orders.some(o => o.id === id)) {
-                    alert("ID នេះមានរួចហើយ! សូមប្រើ ID ផ្សេង។");
-                    return;
-                }
-                const newOrder = { id, seller, name, phone, date, product, status: 'pending' };
-                orders.push(newOrder);
-                alert("បានបញ្ចូលការកក់ថ្មីដោយជោគជ័យ!");
-            } else if (mode === 'edit') {
-                const index = orders.findIndex(o => o.id === id);
-                if (index !== -1) {
-                    orders[index].seller = seller;
-                    orders[index].name = name;
-                    orders[index].phone = phone;
-                    orders[index].date = date;
-                    orders[index].product = product;
-                    alert("បានកែប្រែទិន្នន័យដោយជោគជ័យ!");
-                }
-            }
-
-            saveOrders(orders);
-            resetForm();
-            searchAndFilterOrders(); 
-        });
-
-        function searchAndFilterOrders() {
-            const searchKey = document.getElementById('searchKey').value.trim().toLowerCase();
-            const filterSeller = document.getElementById('filterSeller').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            const resultArea = document.getElementById('searchResultArea');
-            
-            const orders = getOrders();
-            let filteredOrders = orders;
-
-            if (filterSeller !== 'all') {
-                filteredOrders = filteredOrders.filter(o => o.seller === filterSeller);
-            }
-
-            if (searchKey) {
-                filteredOrders = filteredOrders.filter(o => 
-                    o.id.toLowerCase() === searchKey || 
-                    o.name.toLowerCase().includes(searchKey) || 
-                    o.phone === searchKey
-                );
-            }
-
-            if (startDate) filteredOrders = filteredOrders.filter(o => o.date >= startDate);
-            if (endDate) filteredOrders = filteredOrders.filter(o => o.date <= endDate);
-
-            if (filteredOrders.length === 0) {
-                resultArea.innerHTML = `
-                    <div class="p-12 border border-dashed rounded text-center text-red-500 font-medium bg-white mt-2">
-                        ❌ មិនមានទិន្នន័យអតិថិជនបង្ហាញឡើយ!
+    <!-- ORDERS TAB -->
+    <div class="tab-content" id="tab-orders">
+        <div class="content-grid">
+            <!-- FORM -->
+            <div class="card" style="position:sticky;top:80px; ">
+                <div class="card-header">
+                    <div class="card-title" id="formTitle"><i class="ti ti-plus"></i> បញ្ចូលការកក់ថ្មី</div>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="formMode" value="add">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">អ្នកលក់ (Seller)</label>
+                            <select id="sellerName" required class="form-control">
+                                <option value="">-- ជ្រើស Seller --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">លេខ ID</label>
+                            <input type="text" id="orderId" required class="form-control" placeholder="ឧ. BK-001">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">ឈ្មោះអតិថិជន</label>
+                            <input type="text" id="custName" required class="form-control" placeholder="ឈ្មោះពេញ">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">លេខទូរស័ព្ទ</label>
+                            <input type="text" id="custPhone" required class="form-control" placeholder="0xx xxx xxx">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ថ្ងៃកក់</label>
+                            <input type="date" id="orderDate" required class="form-control">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">មុខទំនិញ</label>
+                            <input type="text" id="productName" required class="form-control" placeholder="ឈ្មោះទំនិញ">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ចំនួន (Qty)</label>
+                            <input type="number" id="qty" min="1" value="1" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">តម្លៃ ($)</label>
+                            <input type="number" id="price" min="0" step="0.01" value="0" class="form-control" placeholder="0.00">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">ស្ថានភាព</label>
+                            <select id="statusField" class="form-control">
+                                <option value="pending">🟠 មិនទាន់ចេញ</option>
+                                <option value="preparing">🔵 កំពុងរៀបចំ</option>
+                                <option value="delivered">🟢 ចេញរួច</option>
+                                <option value="cancelled">🔴 បោះបង់</option>
+                            </select>
+                        </div>
+                        <div class="form-group full" style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                            <button class="btn btn-primary btn-full" id="btnSubmit" onclick="submitForm()">
+                                <i class="ti ti-device-floppy"></i> រក្សាទុក
+                            </button>
+                            <button class="btn btn-ghost btn-full" id="btnCancelEdit" onclick="resetForm()" style="display:none;">
+                                <i class="ti ti-x"></i> បោះបង់ការកែប្រែ
+                            </button>
+                            <button class="btn btn-ghost btn-full" onclick="resetForm()" style="font-size:12px;color:var(--gray-400);">
+                                <i class="ti ti-eraser"></i> សម្អាត Form
+                            </button>
+                        </div>
                     </div>
-                `;
-                return;
-            }
+                </div>
+            </div>
 
-            let tableHtml = `
-                <table class="min-w-full divide-y divide-gray-200 text-sm text-left border border-gray-200 rounded mt-2 bg-white">
-                    <thead class="bg-gray-50 text-gray-700 font-medium border-b border-gray-200">
-                        <tr>
-                            <th class="p-3">ID</th>
-                            <th class="p-3">អ្នកលក់ (Seller)</th>
-                            <th class="p-3">ឈ្មោះអតិថិជន</th>
-                            <th class="p-3">លេខទូរស័ព្ទ</th>
-                            <th class="p-3">មុខទំនិញ</th>
-                            <th class="p-3">ថ្ងៃកក់</th>
-                            <th class="p-3 text-center">ស្ថានភាព</th>
-                            <th class="p-3 text-center">សកម្មភាព</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 bg-white text-gray-600">
-            `;
+            <!-- TABLE SECTION -->
+            <div>
+                <div class="card">
+                    <!-- FILTERS -->
+                    <div class="filter-bar">
+                        <div class="form-group">
+                            <label class="form-label">ស្វែងរក</label>
+                            <div style="position:relative;">
+                                <i class="ti ti-search" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:14px;"></i>
+                                <input type="text" id="searchKey" oninput="renderTable()" placeholder="ID, ឈ្មោះ, ទូរស័ព្ទ..." class="form-control" style="padding-left:30px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Seller</label>
+                            <select id="filterSeller" onchange="renderTable()" class="form-control">
+                                <option value="all">ទាំងអស់</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ស្ថានភាព</label>
+                            <select id="filterStatus" onchange="renderTable()" class="form-control">
+                                <option value="all">ទាំងអស់</option>
+                                <option value="pending">មិនទាន់ចេញ</option>
+                                <option value="preparing">កំពុងរៀបចំ</option>
+                                <option value="delivered">ចេញរួច</option>
+                                <option value="cancelled">បោះបង់</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ចាប់ពី</label>
+                            <input type="date" id="startDate" onchange="renderTable()" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">រហូតដល់</label>
+                            <input type="date" id="endDate" onchange="renderTable()" class="form-control">
+                        </div>
+                        <div style="display:flex;align-items:flex-end;">
+                            <button class="btn btn-ghost btn-full" onclick="resetFilters()">
+                                <i class="ti ti-refresh"></i> Reset
+                            </button>
+                        </div>
+                    </div>
 
-            filteredOrders.forEach(order => {
-                let statusBadge = '';
-                let actionButton = '';
+                    <!-- TABLE -->
+                    <div class="table-wrapper">
+                        <table id="orderTable">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortBy('id')">ID <span class="sort-arrow" id="sort-id">↕</span></th>
+                                    <th onclick="sortBy('seller')">Seller <span class="sort-arrow" id="sort-seller">↕</span></th>
+                                    <th onclick="sortBy('name')">ឈ្មោះ <span class="sort-arrow" id="sort-name">↕</span></th>
+                                    <th>ទូរស័ព្ទ</th>
+                                    <th onclick="sortBy('product')">ទំនិញ <span class="sort-arrow" id="sort-product">↕</span></th>
+                                    <th onclick="sortBy('date')">ថ្ងៃ <span class="sort-arrow" id="sort-date">↕</span></th>
+                                    <th>ចំនួន</th>
+                                    <th onclick="sortBy('total')">សរុប <span class="sort-arrow" id="sort-total">↕</span></th>
+                                    <th>ស្ថានភាព</th>
+                                    <th>សកម្មភាព</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                if (order.status === 'pending') {
-                    statusBadge = `<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold">មិនទាន់ចេញ</span>`;
-                    actionButton = `
-                        <button onclick="confirmDelivery('${order.id}')" id="btnDeliver-${order.id}" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium transition mr-1 cursor-pointer">
-                            បញ្ជាក់ការចេញ
-                        </button>
-                    `;
-                } else {
-                    statusBadge = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">✓ ចេញរួច</span>`;
-                    actionButton = `<span class="text-xs text-gray-400 italic mr-1">រួចរាល់</span>`;
-                }
+    <!-- SELLERS TAB -->
+    <div class="tab-content" id="tab-sellers">
+        <div style="max-width:600px;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="ti ti-users"></i> គ្រប់គ្រង Seller</div>
+                </div>
+                <div class="card-body">
+                    <div style="display:flex;gap:8px;">
+                        <input type="text" id="newSellerInput" class="form-control" placeholder="ឈ្មោះ Seller ថ្មី..." style="flex:1;">
+                        <button class="btn btn-primary" onclick="addNewSeller()"><i class="ti ti-plus"></i> បន្ថែម</button>
+                    </div>
+                    <div class="seller-list" id="sellerList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                tableHtml += `
-                    <tr>
-                        <td class="p-3 font-semibold text-blue-600">${order.id}</td>
-                        <td class="p-3 font-medium text-gray-500">${order.seller || 'មិនមាន'}</td>
-                        <td class="p-3">${order.name}</td>
-                        <td class="p-3">${order.phone}</td>
-                        <td class="p-3 text-purple-600 font-medium">${order.product}</td>
-                        <td class="p-3">${order.date}</td>
-                        <td class="p-3 text-center">${statusBadge}</td>
-                        <td class="p-3 text-center flex justify-center items-center space-x-1">
-                            ${actionButton}
-                            <button onclick="editOrder('${order.id}')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded text-xs font-medium transition cursor-pointer">កែប្រែ</button>
-                            <button onclick="deleteOrder('${order.id}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-medium transition cursor-pointer">លុប</button>
-                        </td>
-                    </tr>
-                `;
-            });
+</div>
 
-            tableHtml += `</tbody></table>`;
-            resultArea.innerHTML = tableHtml;
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+        <h3 id="modalTitle">បញ្ជាក់ការលុប</h3>
+        <p id="modalMsg">តើអ្នកចង់លុបការកក់នេះមែនទេ?</p>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">បោះបង់</button>
+            <button class="btn btn-danger" id="modalConfirmBtn">លុប</button>
+        </div>
+    </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ===== STATE =====
+let sortField = 'date';
+let sortDir = 'desc';
+let currentPage = 1;
+const PAGE_SIZE = 10;
+let pendingAction = null;
+
+// ===== STORAGE =====
+function getSellers() {
+    const d = localStorage.getItem('bk_sellers_v6');
+    if (d) return JSON.parse(d);
+    const def = ["កញ្ញា ធីតា", "លោក សុខា", "កញ្ញា ស្រីនាថ"];
+    localStorage.setItem('bk_sellers_v6', JSON.stringify(def));
+    return def;
+}
+function saveSellers(s) { localStorage.setItem('bk_sellers_v6', JSON.stringify(s)); }
+function getOrders() {
+    // Migrate from old key
+    const old = localStorage.getItem('booking_orders_v4');
+    if (old && !localStorage.getItem('bk_orders_v6')) {
+        const parsed = JSON.parse(old);
+        parsed.forEach(o => { o.qty = o.qty || 1; o.price = o.price || 0; if (!o.status) o.status = 'pending'; });
+        localStorage.setItem('bk_orders_v6', JSON.stringify(parsed));
+    }
+    const d = localStorage.getItem('bk_orders_v6');
+    return d ? JSON.parse(d) : [];
+}
+function saveOrders(o) { localStorage.setItem('bk_orders_v6', JSON.stringify(o)); }
+
+// ===== TOAST =====
+function toast(msg, type='success') {
+    const icons = { success: 'ti-check', error: 'ti-alert-circle', info: 'ti-info-circle' };
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<i class="ti ${icons[type]}" style="font-size:16px;"></i> ${msg}`;
+    document.getElementById('toastContainer').appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+}
+
+// ===== MODAL =====
+function showModal(title, msg, onConfirm, btnLabel='លុប', btnClass='btn-danger') {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalMsg').textContent = msg;
+    const btn = document.getElementById('modalConfirmBtn');
+    btn.textContent = btnLabel;
+    btn.className = `btn ${btnClass}`;
+    pendingAction = onConfirm;
+    document.getElementById('confirmModal').classList.add('open');
+}
+function closeModal() {
+    document.getElementById('confirmModal').classList.remove('open');
+    pendingAction = null;
+}
+document.getElementById('modalConfirmBtn').onclick = function() {
+    if (pendingAction) pendingAction();
+    closeModal();
+};
+document.getElementById('confirmModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+// ===== DARK MODE =====
+function toggleDark() {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? '' : 'dark');
+    document.getElementById('btnDark').innerHTML = isDark ? '<i class="ti ti-moon"></i>' : '<i class="ti ti-sun"></i>';
+    localStorage.setItem('bk_dark', isDark ? '0' : '1');
+}
+
+// ===== TABS =====
+function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+    document.getElementById(`tab-${name}`).classList.add('active');
+    if (name === 'dashboard') renderDashboard();
+    if (name === 'sellers') renderSellerList();
+}
+
+// ===== SELLERS =====
+function renderSellerDropdowns() {
+    const sellers = getSellers();
+    const sel = document.getElementById('sellerName');
+    const flt = document.getElementById('filterSeller');
+    const cv = sel.value, cf = flt.value;
+    sel.innerHTML = '<option value="">-- ជ្រើស Seller --</option>';
+    flt.innerHTML = '<option value="all">ទាំងអស់</option>';
+    sellers.forEach(s => {
+        sel.innerHTML += `<option value="${s}">${s}</option>`;
+        flt.innerHTML += `<option value="${s}">${s}</option>`;
+    });
+    if (cv) sel.value = cv;
+    if (cf) flt.value = cf;
+}
+
+function renderSellerList() {
+    const sellers = getSellers();
+    const orders = getOrders();
+    const list = document.getElementById('sellerList');
+    if (!sellers.length) { list.innerHTML = '<p style="color:var(--gray-400);font-size:13px;">មិនមាន Seller ទេ</p>'; return; }
+    list.innerHTML = sellers.map((s, i) => {
+        const count = orders.filter(o => o.seller === s).length;
+        const initials = s.split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
+        return `<div class="seller-item">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="seller-avatar">${initials}</div>
+                <span>${s}</span>
+                <span class="badge badge-blue">${count} order</span>
+            </div>
+            <button class="btn btn-sm" style="background:var(--danger-light);color:var(--danger);border:none;" onclick="deleteSeller(${i})">
+                <i class="ti ti-trash"></i>
+            </button>
+        </div>`;
+    }).join('');
+}
+
+function addNewSeller() {
+    const inp = document.getElementById('newSellerInput');
+    const name = inp.value.trim();
+    if (!name) { toast('សូមវាយឈ្មោះ Seller!', 'error'); return; }
+    let sellers = getSellers();
+    if (sellers.includes(name)) { toast('ឈ្មោះ Seller នេះមានរួចហើយ!', 'error'); return; }
+    sellers.push(name);
+    saveSellers(sellers);
+    renderSellerDropdowns();
+    renderSellerList();
+    inp.value = '';
+    toast(`បានបន្ថែម "${name}" ដោយជោគជ័យ!`);
+}
+
+function deleteSeller(idx) {
+    const sellers = getSellers();
+    const name = sellers[idx];
+    const orders = getOrders();
+    const hasOrders = orders.some(o => o.seller === name);
+    const msg = hasOrders
+        ? `Seller "${name}" មានការកក់ ${orders.filter(o=>o.seller===name).length} ។ លុបរួច Seller នៅក្នុង Order នៅតែមាន។`
+        : `លុប Seller "${name}"?`;
+    showModal('លុប Seller', msg, () => {
+        sellers.splice(idx, 1);
+        saveSellers(sellers);
+        renderSellerDropdowns();
+        renderSellerList();
+        toast(`បានលុប "${name}"`, 'info');
+    });
+}
+
+// ===== FORM =====
+function submitForm() {
+    const mode = document.getElementById('formMode').value;
+    const seller = document.getElementById('sellerName').value;
+    const id = document.getElementById('orderId').value.trim();
+    const name = document.getElementById('custName').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const date = document.getElementById('orderDate').value;
+    const product = document.getElementById('productName').value.trim();
+    const qty = parseInt(document.getElementById('qty').value) || 1;
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const status = document.getElementById('statusField').value;
+
+    if (!seller || !id || !name || !phone || !date || !product) {
+        toast('សូមបំពេញព័ត៌មានឱ្យពេញលេញ!', 'error'); return;
+    }
+
+    let orders = getOrders();
+
+    if (mode === 'add') {
+        if (orders.some(o => o.id === id)) { toast('ID នេះមានរួចហើយ!', 'error'); return; }
+        orders.push({ id, seller, name, phone, date, product, qty, price, status });
+        toast('បានបញ្ចូលការកក់ថ្មីដោយជោគជ័យ!');
+    } else {
+        const idx = orders.findIndex(o => o.id === id);
+        if (idx !== -1) {
+            orders[idx] = { ...orders[idx], seller, name, phone, date, product, qty, price, status };
+            toast('បានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ!');
         }
+    }
+    saveOrders(orders);
+    resetForm();
+    renderTable();
+}
 
-        function confirmDelivery(orderId) {
-            const btn = document.getElementById(`btnDeliver-${orderId}`);
-            if(btn) {
-                btn.disabled = true;
-                btn.innerText = "រក្សាទុក...";
-                btn.className = "bg-gray-400 text-white px-2 py-1 rounded text-xs cursor-not-allowed mr-1";
-            }
+function editOrder(id) {
+    const order = getOrders().find(o => o.id === id);
+    if (!order) return;
+    document.getElementById('formMode').value = 'edit';
+    document.getElementById('formTitle').innerHTML = '<i class="ti ti-edit"></i> កែប្រែការកក់';
+    document.getElementById('sellerName').value = order.seller || '';
+    document.getElementById('orderId').value = order.id;
+    document.getElementById('orderId').disabled = true;
+    document.getElementById('custName').value = order.name;
+    document.getElementById('custPhone').value = order.phone;
+    document.getElementById('orderDate').value = order.date;
+    document.getElementById('productName').value = order.product;
+    document.getElementById('qty').value = order.qty || 1;
+    document.getElementById('price').value = order.price || 0;
+    document.getElementById('statusField').value = order.status || 'pending';
+    document.getElementById('btnSubmit').innerHTML = '<i class="ti ti-refresh"></i> Update';
+    document.getElementById('btnCancelEdit').style.display = 'flex';
+    switchTab('orders');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-            let orders = getOrders();
-            const idx = orders.findIndex(o => o.id === orderId);
-            if (idx !== -1) {
-                orders[idx].status = 'delivered';
-                saveOrders(orders);
-                searchAndFilterOrders();
-            }
+function deleteOrder(id) {
+    showModal('លុបការកក់', `លុបការកក់ ID: ${id}?`, () => {
+        let orders = getOrders().filter(o => o.id !== id);
+        saveOrders(orders);
+        renderTable();
+        renderDashboard();
+        toast('បានលុបដោយជោគជ័យ!', 'info');
+    });
+}
+
+function resetForm() {
+    document.getElementById('orderId').disabled = false;
+    document.getElementById('formMode').value = 'add';
+    document.getElementById('formTitle').innerHTML = '<i class="ti ti-plus"></i> បញ្ចូលការកក់ថ្មី';
+    document.getElementById('btnSubmit').innerHTML = '<i class="ti ti-device-floppy"></i> រក្សាទុក';
+    document.getElementById('btnCancelEdit').style.display = 'none';
+    ['sellerName','orderId','custName','custPhone','orderDate','productName','statusField'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el.tagName === 'SELECT') el.selectedIndex = 0;
+        else el.value = '';
+    });
+    document.getElementById('qty').value = 1;
+    document.getElementById('price').value = 0;
+}
+
+// ===== TABLE =====
+function sortBy(field) {
+    if (sortField === field) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    else { sortField = field; sortDir = 'asc'; }
+    currentPage = 1;
+    renderTable();
+}
+
+function getFiltered() {
+    const sk = document.getElementById('searchKey').value.trim().toLowerCase();
+    const fs = document.getElementById('filterSeller').value;
+    const fst = document.getElementById('filterStatus').value;
+    const sd = document.getElementById('startDate').value;
+    const ed = document.getElementById('endDate').value;
+    let orders = getOrders();
+    if (fs !== 'all') orders = orders.filter(o => o.seller === fs);
+    if (fst !== 'all') orders = orders.filter(o => (o.status || 'pending') === fst);
+    if (sk) orders = orders.filter(o => o.id.toLowerCase().includes(sk) || o.name.toLowerCase().includes(sk) || o.phone.includes(sk) || o.product.toLowerCase().includes(sk));
+    if (sd) orders = orders.filter(o => o.date >= sd);
+    if (ed) orders = orders.filter(o => o.date <= ed);
+    // sort
+    orders.sort((a, b) => {
+        let va = a[sortField] ?? '', vb = b[sortField] ?? '';
+        if (sortField === 'total') { va = (a.qty||1)*(a.price||0); vb = (b.qty||1)*(b.price||0); }
+        if (va < vb) return sortDir === 'asc' ? -1 : 1;
+        if (va > vb) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+    });
+    return orders;
+}
+
+const STATUS_LABELS = {
+    pending: { label: 'មិនទាន់ចេញ', cls: 'badge-orange' },
+    preparing: { label: 'កំពុងរៀបចំ', cls: 'badge-blue' },
+    delivered: { label: 'ចេញរួច', cls: 'badge-green' },
+    cancelled: { label: 'បោះបង់', cls: 'badge-red' }
+};
+
+function renderTable() {
+    const orders = getFiltered();
+    const total = orders.length;
+    const pages = Math.ceil(total / PAGE_SIZE) || 1;
+    if (currentPage > pages) currentPage = pages;
+    const slice = orders.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+
+    // update sort arrows
+    ['id','seller','name','product','date','total'].forEach(f => {
+        const el = document.getElementById(`sort-${f}`);
+        if (el) { el.textContent = sortField === f ? (sortDir==='asc'?'↑':'↓') : '↕'; el.className = `sort-arrow${sortField===f?' active':''}`; }
+    });
+
+    const tbody = document.getElementById('tableBody');
+    if (!slice.length) {
+        tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><i class="ti ti-inbox"></i><p>មិនមានការកក់ត្រូវបង្ហាញ</p></div></td></tr>`;
+    } else {
+        tbody.innerHTML = slice.map(o => {
+            const st = STATUS_LABELS[o.status || 'pending'];
+            const total = ((o.qty||1) * (o.price||0)).toFixed(2);
+            const initials = (o.seller||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+            return `<tr>
+                <td><b style="color:var(--primary);">${o.id}</b></td>
+                <td><div style="display:flex;align-items:center;gap:7px;"><div class="seller-avatar">${initials}</div>${o.seller||'-'}</div></td>
+                <td>${o.name}</td>
+                <td style="color:var(--gray-500);">${o.phone}</td>
+                <td style="color:var(--purple);font-weight:500;">${o.product}</td>
+                <td style="color:var(--gray-500);">${o.date}</td>
+                <td style="text-align:center;">${o.qty||1}</td>
+                <td style="font-weight:500;">$${total}</td>
+                <td><span class="badge ${st.cls}">${st.label}</span></td>
+                <td>
+                    <div style="display:flex;gap:4px;">
+                        <button class="btn btn-sm btn-warning" onclick="editOrder('${o.id}')" title="កែប្រែ"><i class="ti ti-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteOrder('${o.id}')" title="លុប"><i class="ti ti-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    // Pagination
+    const pag = document.getElementById('pagination');
+    let btns = '';
+    for (let i = 1; i <= pages; i++) {
+        if (pages <= 7 || i === 1 || i === pages || Math.abs(i - currentPage) <= 1) {
+            btns += `<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+        } else if (Math.abs(i - currentPage) === 2) {
+            btns += `<span style="padding:0 4px;color:var(--gray-400);">…</span>`;
         }
+    }
+    pag.innerHTML = `<span>បង្ហាញ ${Math.min((currentPage-1)*PAGE_SIZE+1,total)}–${Math.min(currentPage*PAGE_SIZE,total)} នៃ ${total}</span>
+        <div class="pagination-btns">
+            <button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}><i class="ti ti-chevron-left" style="font-size:12px;"></i></button>
+            ${btns}
+            <button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}><i class="ti ti-chevron-right" style="font-size:12px;"></i></button>
+        </div>`;
+}
 
-        function editOrder(orderId) {
-            const orders = getOrders();
-            const order = orders.find(o => o.id === orderId);
-            
-            if (order) {
-                document.getElementById('formMode').value = 'edit';
-                document.getElementById('formTitle').innerText = '✍️ កែប្រែព័ត៌មានការកក់';
-                
-                document.getElementById('sellerName').value = order.seller || '';
-                document.getElementById('orderId').value = order.id;
-                document.getElementById('orderId').disabled = true; 
-                document.getElementById('custName').value = order.name;
-                document.getElementById('custPhone').value = order.phone;
-                document.getElementById('orderDate').value = order.date;
-                document.getElementById('productName').value = order.product;
-                
-                document.getElementById('btnSubmit').innerText = 'ធ្វើបច្ចុប្បន្នភាព (Update)';
-                document.getElementById('btnCancelEdit').classList.remove('hidden');
-                
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            }
-        }
+function goPage(p) {
+    const orders = getFiltered();
+    const pages = Math.ceil(orders.length / PAGE_SIZE) || 1;
+    if (p < 1 || p > pages) return;
+    currentPage = p;
+    renderTable();
+}
 
-        function deleteOrder(orderId) {
-            if (confirm(`តើអ្នកពិតជាចង់លុបការកក់ ID: ${orderId} នេះមែនទេ?`)) {
-                let orders = getOrders();
-                orders = orders.filter(o => o.id !== orderId);
-                saveOrders(orders);
-                
-                alert("បានលុបដោយជោគជ័យ!");
-                searchAndFilterOrders();
-            }
-        }
+function resetFilters() {
+    document.getElementById('searchKey').value = '';
+    document.getElementById('filterSeller').value = 'all';
+    document.getElementById('filterStatus').value = 'all';
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+    currentPage = 1;
+    renderTable();
+}
 
-        function resetForm() {
-            document.getElementById('orderForm').reset();
-            document.getElementById('formMode').value = 'add';
-            document.getElementById('formTitle').innerText = '១. បញ្ចូលការកក់ថ្មី';
-            document.getElementById('orderId').disabled = false;
-            document.getElementById('btnSubmit').innerText = 'រក្សាទុក';
-            document.getElementById('btnCancelEdit').classList.add('hidden');
-        }
+// ===== DASHBOARD =====
+function renderDashboard() {
+    const orders = getOrders();
+    const total = orders.length;
+    const pending = orders.filter(o => (o.status||'pending') === 'pending').length;
+    const delivered = orders.filter(o => o.status === 'delivered').length;
+    const revenue = orders.filter(o=>o.status==='delivered').reduce((s,o)=>s+(o.qty||1)*(o.price||0),0);
 
-        function resetFilters() {
-            document.getElementById('searchKey').value = '';
-            document.getElementById('filterSeller').value = 'all';
-            document.getElementById('startDate').value = '';
-            document.getElementById('endDate').value = '';
-            searchAndFilterOrders();
-        }
+    document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card"><div class="stat-icon blue"><i class="ti ti-package"></i></div><div><div class="stat-label">ការកក់សរុប</div><div class="stat-value">${total}</div></div></div>
+        <div class="stat-card"><div class="stat-icon orange"><i class="ti ti-clock"></i></div><div><div class="stat-label">មិនទាន់ចេញ</div><div class="stat-value">${pending}</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="ti ti-check"></i></div><div><div class="stat-label">ចេញរួច</div><div class="stat-value">${delivered}</div></div></div>
+        <div class="stat-card"><div class="stat-icon purple"><i class="ti ti-currency-dollar"></i></div><div><div class="stat-label">Revenue</div><div class="stat-value">$${revenue.toFixed(0)}</div></div></div>
+    `;
 
-        // ដំណើរការដំបូងពេលបើក Web Page
-        window.onload = function() {
-            renderSellerDropdowns(); 
-            searchAndFilterOrders();  
-        };
-    </script>
+    // Seller chart
+    const sellers = getSellers();
+    const maxOrders = Math.max(...sellers.map(s => orders.filter(o=>o.seller===s).length), 1);
+    document.getElementById('chartSeller').innerHTML = sellers.length
+        ? sellers.map(s => {
+            const cnt = orders.filter(o=>o.seller===s).length;
+            const pct = Math.round(cnt / maxOrders * 100);
+            const initials = s.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+            return `<div class="chart-row">
+                <div class="chart-row-label" title="${s}">${s}</div>
+                <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${pct}%">${cnt > 0 ? cnt : ''}</div></div>
+            </div>`;
+        }).join('')
+        : '<p style="color:var(--gray-400);font-size:13px;padding:12px;">មិនមានទិន្នន័យ</p>';
+
+    // Recent orders
+    const recent = [...orders].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+    document.getElementById('recentOrders').innerHTML = recent.length
+        ? recent.map(o => {
+            const st = STATUS_LABELS[o.status||'pending'];
+            return `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--gray-100);">
+                <div>
+                    <div style="font-size:13px;font-weight:500;">${o.name}</div>
+                    <div style="font-size:12px;color:var(--gray-400);">${o.product} · ${o.date}</div>
+                </div>
+                <span class="badge ${st.cls}">${st.label}</span>
+            </div>`;
+        }).join('')
+        : '<div class="empty-state" style="padding:30px;"><i class="ti ti-inbox" style="font-size:32px;"></i><p>មិនមានទិន្នន័យ</p></div>';
+}
+
+// ===== EXPORT CSV =====
+function exportCSV() {
+    const orders = getFiltered();
+    if (!orders.length) { toast('មិនមានទិន្នន័យ Export!', 'error'); return; }
+    const header = ['ID','Seller','ឈ្មោះ','ទូរស័ព្ទ','ទំនិញ','ថ្ងៃ','ចំនួន','តម្លៃ','សរុប','ស្ថានភាព'];
+    const rows = orders.map(o => [
+        o.id, o.seller||'', o.name, o.phone, o.product, o.date,
+        o.qty||1, o.price||0, ((o.qty||1)*(o.price||0)).toFixed(2),
+        STATUS_LABELS[o.status||'pending'].label
+    ]);
+    const csv = [header, ...rows].map(r => r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+    a.download = `booking_export_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    toast('Export CSV ដោយជោគជ័យ!');
+}
+
+// ===== INIT =====
+window.onload = function() {
+    if (localStorage.getItem('bk_dark') === '1') {
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('btnDark').innerHTML = '<i class="ti ti-sun"></i>';
+    }
+    // set today's date
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('orderDate').value = today;
+
+    renderSellerDropdowns();
+    renderTable();
+    renderDashboard();
+};
+</script>
 </body>
 </html>
