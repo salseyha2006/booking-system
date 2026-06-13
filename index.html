@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ប្រព័ន្ធគ្រប់គ្រងការកក់អីវ៉ាន់ V5.1 (Fixed Seller Bug)</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body { font-family: 'Kantumruy Pro', 'Khmer OS Battambang', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        <h1 class="text-2xl font-bold text-center text-blue-600">ប្រព័ន្ធគ្រប់គ្រងការកក់អីវ៉ាន់ - បញ្ជីរួម និងតម្រងតាម Seller</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow lg:col-span-1 h-fit">
+                <div class="border-b pb-2 mb-4">
+                    <h2 id="formTitle" class="text-lg font-semibold text-gray-700">១. បញ្ចូលការកក់ថ្មី</h2>
+                </div>
+                
+                <form id="orderForm" class="space-y-3">
+                    <input type="hidden" id="formMode" value="add">
+                    
+                    <div>
+                        <div class="flex justify-between items-center">
+                            <label class="block text-sm text-gray-600">អ្នកលក់ (Seller)</label>
+                            <button type="button" onclick="addNewSeller()" class="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center gap-0.5 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 cursor-pointer">
+                                ➕ ថែម Seller ថ្មី
+                            </button>
+                        </div>
+                        <select id="sellerName" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500 bg-white">
+                            <option value="">-- ជ្រើសរើសឈ្មោះ Seller --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600">លេខសម្គាល់ (ID)</label>
+                        <input type="text" id="orderId" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600">ឈ្មោះអតិថិជន</label>
+                        <input type="text" id="custName" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600">លេខទូរស័ព្ទ</label>
+                        <input type="text" id="custPhone" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600">កាលបរិច្ឆេទកក់</label>
+                        <input type="date" id="orderDate" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600">មុខទំនិញ (Product)</label>
+                        <input type="text" id="productName" required class="w-full border p-2 rounded mt-1 focus:outline-blue-500">
+                    </div>
+                    
+                    <div class="flex flex-col gap-2 pt-2">
+                        <button type="submit" id="btnSubmit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 font-medium transition cursor-pointer">រក្សាទុក</button>
+                        <button type="button" id="btnCancelEdit" onclick="resetForm()" class="hidden w-full bg-gray-400 text-white p-2 rounded hover:bg-gray-500 font-medium transition cursor-pointer">បោះបង់ការកែប្រែ</button>
+                        <button type="button" onclick="resetForm()" class="w-full text-xs text-gray-500 hover:text-gray-700 text-center underline pt-1 cursor-pointer">សម្អាត Form (Clear)</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow lg:col-span-2 space-y-4">
+                <h2 class="text-lg font-semibold text-gray-700 border-b pb-2">២. បញ្ជីទិន្នន័យអតិថិជនកក់ទាំងអស់</h2>
+                
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs text-gray-500 mb-1">ស្វែងរកតាម ID, ឈ្មោះ ឬ លេខទូរស័ព្ទ</label>
+                        <input type="text" id="searchKey" oninput="searchAndFilterOrders()" placeholder="វាយព័ត៌មានអតិថិជន..." class="w-full border p-2 rounded bg-white focus:outline-green-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs text-gray-500 mb-1">🎯 មើលតាមអ្នកលក់ (Filter by Seller)</label>
+                        <select id="filterSeller" onchange="searchAndFilterOrders()" class="w-full border p-2 rounded bg-white focus:outline-green-500 font-medium text-blue-600">
+                            <option value="all">-- បង្ហាញអតិថិជនទាំងអស់ --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">ចាប់ពីថ្ងៃ (Start Date)</label>
+                        <input type="date" id="startDate" onchange="searchAndFilterOrders()" class="w-full border p-2 rounded bg-white focus:outline-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">ដល់ថ្ងៃ (End Date)</label>
+                        <input type="date" id="endDate" onchange="searchAndFilterOrders()" class="w-full border p-2 rounded bg-white focus:outline-green-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <button onclick="resetFilters()" class="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600 font-medium transition cursor-pointer">
+                            🔄 សម្អាតតម្រង (Reset Filters)
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="searchResultArea" class="overflow-x-auto min-h-[300px]">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ១. ផ្នែកគ្រប់គ្រងទិន្នន័យអ្នកលក់ (Seller) ---
+        function getSellers() {
+            const sellers = localStorage.getItem('booking_sellers');
+            if (sellers) {
+                return JSON.parse(sellers);
+            } else {
+                // បើបើកដំបូងគ្មានទិន្នន័យ ង្កើតបញ្ជីដើមជូន
+                const defaultSellers = ["កញ្ញា ធីតា", "លោក សុខា", "កញ្ញា ស្រីនាថ"];
+                localStorage.setItem('booking_sellers', JSON.stringify(defaultSellers));
+                return defaultSellers;
+            }
+        }
+
+        function renderSellerDropdowns() {
+            const sellerSelect = document.getElementById('sellerName');
+            const filterSellerSelect = document.getElementById('filterSeller');
+            const sellers = getSellers();
+            
+            // រក្សាតម្លៃដែលកំពុងជ្រើសរើសចាស់
+            const currentSelectValue = sellerSelect.value; 
+            const currentFilterValue = filterSellerSelect.value; 
+
+            // សម្អាតទិន្នន័យចាស់ក្នុង Dropdown ចេញ
+            sellerSelect.innerHTML = '<option value="">-- ជ្រើសរើសឈ្មោះ Seller --</option>';
+            filterSellerSelect.innerHTML = '<option value="all">-- បង្ហាញអតិថិជនទាំងអស់ --</option>';
+            
+            // ចាក់ទិន្នន័យថ្មីចូល
+            sellers.forEach(seller => {
+                const option1 = document.createElement('option');
+                option1.value = seller; option1.text = seller;
+                sellerSelect.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = seller; option2.text = `មើលតែរបស់៖ ${seller}`;
+                filterSellerSelect.appendChild(option2);
+            });
+
+            // ដាក់តម្លៃចាស់ចូលវិញ (បើមាន)
+            if (currentSelectValue) sellerSelect.value = currentSelectValue;
+            if (currentFilterValue) filterSellerSelect.value = currentFilterValue;
+        }
+
+        function addNewSeller() {
+            const newName = prompt("សូមវាយបញ្ចូលឈ្មោះ Seller ថ្មី៖");
+            if (newName === null) return; // ចុច Cancel
+            
+            const trimmedName = newName.trim();
+            if (trimmedName === "") {
+                alert("ឈ្មោះមិនអាចទទេបានទេ!");
+                return;
+            }
+
+            let sellers = getSellers();
+            if (sellers.includes(trimmedName)) {
+                alert("ឈ្មោះ Seller នេះមានរួចរាល់ហើយ!");
+                return;
+            }
+
+            // បន្ថែមឈ្មោះថ្មីចូលកូនកាត់ LocalStorage
+            sellers.push(trimmedName);
+            localStorage.setItem('booking_sellers', JSON.stringify(sellers));
+            
+            // ធ្វើបច្ចុប្បន្នភាព Dropdown ទាំងពីរភ្លាមៗ
+            renderSellerDropdowns();
+            
+            // ចាប់យកឈ្មោះដែលទើបថែមថ្មីនោះមកជ្រើសរើសលើ Form តែម្តង
+            document.getElementById('sellerName').value = trimmedName;
+            
+            alert(`បានបន្ថែម Seller "${trimmedName}" ជោគជ័យ!`);
+        }
+
+
+        // --- ២. ផ្នែកគ្រប់គ្រងទិន្នន័យការកក់ (Orders) ---
+        function getOrders() {
+            const orders = localStorage.getItem('booking_orders_v4');
+            return orders ? JSON.parse(orders) : [];
+        }
+
+        function saveOrders(orders) {
+            localStorage.setItem('booking_orders_v4', JSON.stringify(orders));
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const mode = document.getElementById('formMode').value;
+            const seller = document.getElementById('sellerName').value;
+            const id = document.getElementById('orderId').value.trim();
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const date = document.getElementById('orderDate').value;
+            const product = document.getElementById('productName').value.trim();
+
+            let orders = getOrders();
+
+            if (mode === 'add') {
+                if (orders.some(o => o.id === id)) {
+                    alert("ID នេះមានរួចហើយ! សូមប្រើ ID ផ្សេង។");
+                    return;
+                }
+                const newOrder = { id, seller, name, phone, date, product, status: 'pending' };
+                orders.push(newOrder);
+                alert("បានបញ្ចូលការកក់ថ្មីដោយជោគជ័យ!");
+            } else if (mode === 'edit') {
+                const index = orders.findIndex(o => o.id === id);
+                if (index !== -1) {
+                    orders[index].seller = seller;
+                    orders[index].name = name;
+                    orders[index].phone = phone;
+                    orders[index].date = date;
+                    orders[index].product = product;
+                    alert("បានកែប្រែទិន្នន័យដោយជោគជ័យ!");
+                }
+            }
+
+            saveOrders(orders);
+            resetForm();
+            searchAndFilterOrders(); 
+        });
+
+        function searchAndFilterOrders() {
+            const searchKey = document.getElementById('searchKey').value.trim().toLowerCase();
+            const filterSeller = document.getElementById('filterSeller').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const resultArea = document.getElementById('searchResultArea');
+            
+            const orders = getOrders();
+            let filteredOrders = orders;
+
+            if (filterSeller !== 'all') {
+                filteredOrders = filteredOrders.filter(o => o.seller === filterSeller);
+            }
+
+            if (searchKey) {
+                filteredOrders = filteredOrders.filter(o => 
+                    o.id.toLowerCase() === searchKey || 
+                    o.name.toLowerCase().includes(searchKey) || 
+                    o.phone === searchKey
+                );
+            }
+
+            if (startDate) filteredOrders = filteredOrders.filter(o => o.date >= startDate);
+            if (endDate) filteredOrders = filteredOrders.filter(o => o.date <= endDate);
+
+            if (filteredOrders.length === 0) {
+                resultArea.innerHTML = `
+                    <div class="p-12 border border-dashed rounded text-center text-red-500 font-medium bg-white mt-2">
+                        ❌ មិនមានទិន្នន័យអតិថិជនបង្ហាញឡើយ!
+                    </div>
+                `;
+                return;
+            }
+
+            let tableHtml = `
+                <table class="min-w-full divide-y divide-gray-200 text-sm text-left border border-gray-200 rounded mt-2 bg-white">
+                    <thead class="bg-gray-50 text-gray-700 font-medium border-b border-gray-200">
+                        <tr>
+                            <th class="p-3">ID</th>
+                            <th class="p-3">អ្នកលក់ (Seller)</th>
+                            <th class="p-3">ឈ្មោះអតិថិជន</th>
+                            <th class="p-3">លេខទូរស័ព្ទ</th>
+                            <th class="p-3">មុខទំនិញ</th>
+                            <th class="p-3">ថ្ងៃកក់</th>
+                            <th class="p-3 text-center">ស្ថានភាព</th>
+                            <th class="p-3 text-center">សកម្មភាព</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white text-gray-600">
+            `;
+
+            filteredOrders.forEach(order => {
+                let statusBadge = '';
+                let actionButton = '';
+
+                if (order.status === 'pending') {
+                    statusBadge = `<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold">មិនទាន់ចេញ</span>`;
+                    actionButton = `
+                        <button onclick="confirmDelivery('${order.id}')" id="btnDeliver-${order.id}" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium transition mr-1 cursor-pointer">
+                            បញ្ជាក់ការចេញ
+                        </button>
+                    `;
+                } else {
+                    statusBadge = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">✓ ចេញរួច</span>`;
+                    actionButton = `<span class="text-xs text-gray-400 italic mr-1">រួចរាល់</span>`;
+                }
+
+                tableHtml += `
+                    <tr>
+                        <td class="p-3 font-semibold text-blue-600">${order.id}</td>
+                        <td class="p-3 font-medium text-gray-500">${order.seller || 'មិនមាន'}</td>
+                        <td class="p-3">${order.name}</td>
+                        <td class="p-3">${order.phone}</td>
+                        <td class="p-3 text-purple-600 font-medium">${order.product}</td>
+                        <td class="p-3">${order.date}</td>
+                        <td class="p-3 text-center">${statusBadge}</td>
+                        <td class="p-3 text-center flex justify-center items-center space-x-1">
+                            ${actionButton}
+                            <button onclick="editOrder('${order.id}')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded text-xs font-medium transition cursor-pointer">កែប្រែ</button>
+                            <button onclick="deleteOrder('${order.id}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-medium transition cursor-pointer">លុប</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += `</tbody></table>`;
+            resultArea.innerHTML = tableHtml;
+        }
+
+        function confirmDelivery(orderId) {
+            const btn = document.getElementById(`btnDeliver-${orderId}`);
+            if(btn) {
+                btn.disabled = true;
+                btn.innerText = "រក្សាទុក...";
+                btn.className = "bg-gray-400 text-white px-2 py-1 rounded text-xs cursor-not-allowed mr-1";
+            }
+
+            let orders = getOrders();
+            const idx = orders.findIndex(o => o.id === orderId);
+            if (idx !== -1) {
+                orders[idx].status = 'delivered';
+                saveOrders(orders);
+                searchAndFilterOrders();
+            }
+        }
+
+        function editOrder(orderId) {
+            const orders = getOrders();
+            const order = orders.find(o => o.id === orderId);
+            
+            if (order) {
+                document.getElementById('formMode').value = 'edit';
+                document.getElementById('formTitle').innerText = '✍️ កែប្រែព័ត៌មានការកក់';
+                
+                document.getElementById('sellerName').value = order.seller || '';
+                document.getElementById('orderId').value = order.id;
+                document.getElementById('orderId').disabled = true; 
+                document.getElementById('custName').value = order.name;
+                document.getElementById('custPhone').value = order.phone;
+                document.getElementById('orderDate').value = order.date;
+                document.getElementById('productName').value = order.product;
+                
+                document.getElementById('btnSubmit').innerText = 'ធ្វើបច្ចុប្បន្នភាព (Update)';
+                document.getElementById('btnCancelEdit').classList.remove('hidden');
+                
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm(`តើអ្នកពិតជាចង់លុបការកក់ ID: ${orderId} នេះមែនទេ?`)) {
+                let orders = getOrders();
+                orders = orders.filter(o => o.id !== orderId);
+                saveOrders(orders);
+                
+                alert("បានលុបដោយជោគជ័យ!");
+                searchAndFilterOrders();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('orderForm').reset();
+            document.getElementById('formMode').value = 'add';
+            document.getElementById('formTitle').innerText = '១. បញ្ចូលការកក់ថ្មី';
+            document.getElementById('orderId').disabled = false;
+            document.getElementById('btnSubmit').innerText = 'រក្សាទុក';
+            document.getElementById('btnCancelEdit').classList.add('hidden');
+        }
+
+        function resetFilters() {
+            document.getElementById('searchKey').value = '';
+            document.getElementById('filterSeller').value = 'all';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            searchAndFilterOrders();
+        }
+
+        // ដំណើរការដំបូងពេលបើក Web Page
+        window.onload = function() {
+            renderSellerDropdowns(); 
+            searchAndFilterOrders();  
+        };
+    </script>
+</body>
+</html>
