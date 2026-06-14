@@ -318,6 +318,114 @@
     .container { padding: 16px 12px 40px; }
     .card { padding: 16px; }
   }
+
+  /* ── Save / Load ── */
+  .top-actions { gap: 10px; }
+  .btn-save {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--blue);
+    color: var(--white);
+    border: none; cursor: pointer;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    font-family: var(--font-km);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-save:hover { background: #1E40AF; }
+  .btn-save:active { transform: scale(0.97); }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--white);
+    color: var(--green-deep);
+    border: 1.5px solid var(--green-bright);
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    font-family: var(--font-km);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-secondary:hover { background: var(--green-pale); }
+  .btn-secondary:active { transform: scale(0.97); }
+
+  .saved-list { display: flex; flex-direction: column; gap: 10px; }
+  .saved-item {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    background: var(--slate-100);
+    border: 1px solid var(--slate-300);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    flex-wrap: wrap;
+  }
+  .saved-item-info { display: flex; flex-direction: column; gap: 2px; }
+  .saved-item-title { font-size: 14px; font-weight: 600; color: var(--green-deep); }
+  .saved-item-meta { font-size: 12px; color: var(--slate-500); font-family: var(--font-mono); }
+  .saved-item-actions { display: flex; gap: 8px; }
+  .btn-mini {
+    border: none; cursor: pointer;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-family: var(--font-km);
+    font-weight: 500;
+    transition: opacity 0.15s;
+  }
+  .btn-mini:hover { opacity: 0.85; }
+  .btn-load { background: var(--green-bright); color: var(--white); }
+  .btn-delete { background: #FECACA; color: #B91C1C; }
+  .empty-msg { color: var(--slate-500); font-size: 13.5px; padding: 6px 0; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,0.45);
+    align-items: center; justify-content: center;
+    z-index: 50; padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    width: 100%; max-width: 360px;
+    box-shadow: var(--shadow);
+  }
+  .modal-box h3 { font-size: 15px; color: var(--green-deep); margin-bottom: 12px; font-weight: 600; }
+  .modal-box input {
+    width: 100%;
+    border: 1.5px solid var(--slate-300);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    font-size: 14px;
+    font-family: var(--font-km);
+    outline: none;
+    margin-bottom: 14px;
+  }
+  .modal-box input:focus { border-color: var(--green-bright); }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--green-deep);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 60;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -337,11 +445,29 @@
 <div class="container">
 
   <div class="top-actions">
+    <button class="btn-secondary" onclick="toggleSavedPanel()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      ការគណនាដែលបានរក្សាទុក
+      <span class="count-badge" id="saved-count">0</span>
+    </button>
+    <button class="btn-save" onclick="openSaveModal()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      រក្សាទុក / Save
+    </button>
     <button class="btn-print" onclick="window.print()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       បោះពុម្ព / Print
     </button>
   </div>
+
+  <!-- Saved Calculations Panel -->
+  <div class="card" id="saved-panel" style="display:none;">
+    <div class="card-title">ការគណនាដែលបានរក្សាទុក</div>
+    <div class="saved-list" id="saved-list">
+      <div class="empty-msg">មិនទាន់មានការគណនាដែលបានរក្សាទុកទេ</div>
+    </div>
+  </div>
+
 
   <!-- Customer Info -->
   <div class="card">
@@ -465,6 +591,20 @@
 
 </div>
 
+<!-- Save Name Modal -->
+<div class="modal-overlay" id="save-modal">
+  <div class="modal-box">
+    <h3>ដាក់ឈ្មោះការគណនានេះ</h3>
+    <input id="save-name-input" type="text" placeholder="ឧ. ផ្ទះលោក Channa - 5kW" />
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeSaveModal()">បោះបង់</button>
+      <button class="btn-save" onclick="confirmSave()">រក្សាទុក</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
 const appliances = [
   {name:"អំពូលភ្លើង LED",       watt:10,   hours:6,    lf:1.00},
@@ -577,6 +717,170 @@ function calc() {
 
 document.getElementById("days").oninput = renderTable;
 renderTable();
+
+/* ───────────── Save / Load / Delete ───────────── */
+const STORAGE_KEY = "novor_solar_saves";
+
+function getSaves() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function setSaves(saves) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(saves));
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function openSaveModal() {
+  document.getElementById("save-name-input").value = "";
+  document.getElementById("save-modal").classList.add("open");
+  setTimeout(() => document.getElementById("save-name-input").focus(), 50);
+}
+
+function closeSaveModal() {
+  document.getElementById("save-modal").classList.remove("open");
+}
+
+function confirmSave() {
+  const name = document.getElementById("save-name-input").value.trim();
+  if (!name) {
+    showToast("សូមបញ្ចូលឈ្មោះមុនរក្សាទុក");
+    return;
+  }
+
+  const data = {
+    id: Date.now(),
+    name: name,
+    savedAt: new Date().toLocaleString("km-KH"),
+    seller: document.getElementById("seller").value,
+    customer: document.getElementById("customer").value,
+    date: document.getElementById("date").value,
+    days: document.getElementById("days").value,
+    psh: document.getElementById("psh").value,
+    loss: document.getElementById("loss").value,
+    safety: document.getElementById("safety").value,
+    state: state.map(s => ({
+      qty: s.qty, watt: s.watt, hours: s.hours, lf: s.lf, checked: s.checked, note: s.note
+    })),
+    results: {
+      r1: document.getElementById("r1").textContent,
+      r2: document.getElementById("r2").textContent,
+      r3: document.getElementById("r3").textContent,
+      r4: document.getElementById("r4").textContent,
+      r5: document.getElementById("r5").textContent,
+      r6: document.getElementById("r6").textContent,
+      r7: document.getElementById("r7").textContent,
+      r8: document.getElementById("r8").textContent
+    }
+  };
+
+  const saves = getSaves();
+  saves.unshift(data);
+  setSaves(saves);
+  closeSaveModal();
+  renderSavedList();
+  document.getElementById("saved-panel").style.display = "block";
+  showToast("បានរក្សាទុកដោយជោគជ័យ ✓");
+}
+
+function toggleSavedPanel() {
+  const panel = document.getElementById("saved-panel");
+  if (panel.style.display === "none") {
+    panel.style.display = "block";
+    renderSavedList();
+  } else {
+    panel.style.display = "none";
+  }
+}
+
+function renderSavedList() {
+  const saves = getSaves();
+  const list = document.getElementById("saved-list");
+  document.getElementById("saved-count").textContent = saves.length;
+
+  if (saves.length === 0) {
+    list.innerHTML = '<div class="empty-msg">មិនទាន់មានការគណនាដែលបានរក្សាទុកទេ</div>';
+    return;
+  }
+
+  list.innerHTML = "";
+  saves.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "saved-item";
+    div.innerHTML = `
+      <div class="saved-item-info">
+        <div class="saved-item-title">${item.name}</div>
+        <div class="saved-item-meta">${item.customer || "—"} • ${item.date || ""} • សរុប/ខែ: ${item.results.r6} kWh • Solar: ${item.results.r8} kW • ${item.savedAt}</div>
+      </div>
+      <div class="saved-item-actions">
+        <button class="btn-mini btn-load" onclick="loadSave(${item.id})">បើក</button>
+        <button class="btn-mini btn-delete" onclick="deleteSave(${item.id})">លុប</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function loadSave(id) {
+  const saves = getSaves();
+  const item = saves.find(s => s.id === id);
+  if (!item) return;
+
+  document.getElementById("seller").value = item.seller || "";
+  document.getElementById("customer").value = item.customer || "";
+  document.getElementById("date").value = item.date || "";
+  document.getElementById("days").value = item.days || 30;
+  document.getElementById("psh").value = item.psh || 4.5;
+  document.getElementById("loss").value = item.loss || 25;
+  document.getElementById("safety").value = item.safety || 20;
+
+  item.state.forEach((s, i) => {
+    if (state[i]) {
+      state[i].qty = s.qty;
+      state[i].watt = s.watt;
+      state[i].hours = s.hours;
+      state[i].lf = s.lf;
+      state[i].checked = s.checked;
+      state[i].note = s.note;
+    }
+  });
+
+  renderTable();
+  document.getElementById("saved-panel").style.display = "none";
+  showToast(`បានបើក "${item.name}" ✓`);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function deleteSave(id) {
+  if (!confirm("តើអ្នកប្រាកដជាចង់លុបការគណនានេះមែនទេ?")) return;
+  let saves = getSaves();
+  saves = saves.filter(s => s.id !== id);
+  setSaves(saves);
+  renderSavedList();
+  showToast("បានលុបដោយជោគជ័យ");
+}
+
+// Close modal on overlay click
+document.getElementById("save-modal").addEventListener("click", function(e) {
+  if (e.target === this) closeSaveModal();
+});
+
+// Enter key to confirm save
+document.getElementById("save-name-input").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") confirmSave();
+});
+
+// init saved count badge on load
+document.getElementById("saved-count").textContent = getSaves().length;
 </script>
 </body>
 </html>
